@@ -118,12 +118,12 @@
             <h4>3. Hướng dẫn đăng ký nhạc chờ Funring</h4>
             <p>Cách đăng ký rất đơn giản. Bạn chỉ cần thực hiện theo 1 trong 2 cách sau:</p>
             <p>- Soạn tin nhắn <span class="text-danger">DKY {{ $url->data->packageCode }}</span> gửi <span class="text-danger">9224</span></p>
-            <p>- Cách 2: Bấm vào nút <span><a href="#" class="btn btn-primary  btn-reg">ĐĂNG KÝ NGAY</a></span> và chọn Đồng ý.</p>
+            <p>- Cách 2: Bấm vào nút <span><a href="javascript://" class="btn btn-primary  btn-reg">ĐĂNG KÝ NGAY</a></span> và chọn Đồng ý.</p>
             <h4>4. Hướng dẫn sử dụng dịch vụ Funring của MobiFone</h4>
             <p>Sau khi đăng ký thành công, để chọn bài hát yêu thích ưa thích làm nhạc chờ, bạn vui lòng soạn: <span>CHON 5409390</span> gửi <span>9224</span>.</p>
         </div>
         <div class="container d-flex justify-content-center">
-            <a href="#" class="btn btn-lg btn-primary btn-reg">ĐĂNG KÝ NGAY</a>
+            <a href="javascript://" class="btn btn-lg btn-primary btn-reg">ĐĂNG KÝ NGAY</a>
         </div>
         <div class="container">
             <h1 class="text-danger">BÀI HÁT</h1>
