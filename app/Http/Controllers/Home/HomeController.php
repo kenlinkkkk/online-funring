@@ -30,7 +30,8 @@ class HomeController extends Controller
                 'code' => $cp_code
             ]
         ];
-        $url = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
+        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
+        $url = json_decode($response->getBody()->getContents());
         $data = compact('url');
         return view('index', $data);
     }
@@ -49,8 +50,9 @@ class HomeController extends Controller
         ];
 
         $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/log_req', $options);
+        $dataResp = json_decode($response->getBody()->getContents());
         $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $data['pkg']."&transid=" .$transId. "&mmisdn=";
-        if ($response->code == 1) {
+        if ($dataResp->code == 1) {
             return response()->json([
                 'url' => $urlRedirect
             ]);
