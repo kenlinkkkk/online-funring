@@ -150,13 +150,16 @@
     });
 
     $('.btn-reg').on('click', function (e) {
+        let url = window.location.href;
+        let code = url.split('/').pop();
        $.ajax({
            url: '/log',
            method: "POST",
            data: {
                pkg: "{{ $url->data->packageCode  }}",
                cp: "{{ $url->data->cpId }}",
-               name: "{{ $url->data->name }}"
+               name: "{{ $url->data->name }}",
+               code: code
            },
            success: function (response) {
                window.location.href = response.url

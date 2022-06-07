@@ -43,7 +43,7 @@ class HomeController extends Controller
 
         $options = [
             'query' => [
-                'code' => $data[''],
+                'code' => $data['code'],
                 'msisdn' => $msisdn,
                 'req_id' => $transId,
             ]
