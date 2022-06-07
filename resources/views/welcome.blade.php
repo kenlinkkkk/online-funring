@@ -154,8 +154,10 @@
             url: '/log',
             method: "POST",
             data: {
-                pkg: "N1",
-                cp: "VANO"
+                pkg: "N2",
+                cp: "VANO",
+                name: "VANO",
+                code: "abcabc"
             },
             success: function (response) {
                 window.location.href = response.url

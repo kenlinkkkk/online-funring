@@ -8,6 +8,7 @@ use App\Models\RequestLog;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 
 class HomeController extends Controller
 {
@@ -69,14 +70,19 @@ class HomeController extends Controller
         $rsCode = $request->get('rs_code');
         $msisdn = $request->get('isdn');
         
-        $log = RequestLog::query()->where([
-            ['trans_id', '=', $transId],
-            ['msisdn', '=', $msisdn]
-        ])->update([
-            'result' => $rsCode[0]
-        ]);
+        $options = [
+            'query' => [
+                'req_id' => $transId,
+                'type' => 'RESPONSE',
+                'rs_code' => $rsCode,
+                'resp_data' => URL::full()
+            ]
+        ];
 
-        if ($rsCode[0]) {
+        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/update_log', $options);
+        $dataResp = json_decode($response->getBody()->getContents());
+
+        if ($dataResp->code == 1) {
             return Redirect::away('http://funring.vn');
         }
 
