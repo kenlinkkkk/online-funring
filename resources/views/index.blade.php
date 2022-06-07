@@ -110,14 +110,14 @@
         <div class="container">
             <h1 class="text-danger">CHI TIẾT</h1>
             <h3>HƯỚNG DẪN ĐĂNG KÝ NHẠC CHỜ FUNRING GIÁ RẺ</h3>
-            <p>Soạn ngay <span class="text-danger">DK {{ $url->package_code ? }}</span> gửi <span class="text-danger">9224</span> để đăng ký dịch vụ nhạc chờ funring của MobiFone và tự tin thể hiện cá tính của mình</p>
+            <p>Soạn ngay <span class="text-danger">DK {{ $url->data->packageCode }}</span> gửi <span class="text-danger">9224</span> để đăng ký dịch vụ nhạc chờ funring của MobiFone và tự tin thể hiện cá tính của mình</p>
             <h4>1. Giới thiệu</h4>
             <p>Nhạc chờ Funring giúp bạn lựa chọn những đoạn nhạc hấp dẫn thay cho hồi chuông chờ thông thường khi có người khác gọi điện đến bạn.</p>
             <h4>2. Giá cước dịch vụ nhạc chờ Funring</h4>
             <p>Chỉ với mức phí SIÊU RẺ 1000 đồng/ngày, bạn đã có thể sử dụng ngay dịch vụ nhạc chờ Funring đầy cá tính và hấp dẫn từ nhà mạng MobiFone.</p>
             <h4>3. Hướng dẫn đăng ký nhạc chờ Funring</h4>
             <p>Cách đăng ký rất đơn giản. Bạn chỉ cần thực hiện theo 1 trong 2 cách sau:</p>
-            <p>- Soạn tin nhắn <span class="text-danger">DKY {{ $url->package_code }}</span> gửi <span class="text-danger">9224</span></p>
+            <p>- Soạn tin nhắn <span class="text-danger">DKY {{ $url->data->packageCode }}</span> gửi <span class="text-danger">9224</span></p>
             <p>- Cách 2: Bấm vào nút <span><a href="#" class="btn btn-primary  btn-reg">ĐĂNG KÝ NGAY</a></span> và chọn Đồng ý.</p>
             <h4>4. Hướng dẫn sử dụng dịch vụ Funring của MobiFone</h4>
             <p>Sau khi đăng ký thành công, để chọn bài hát yêu thích ưa thích làm nhạc chờ, bạn vui lòng soạn: <span>CHON 5409390</span> gửi <span>9224</span>.</p>
@@ -154,8 +154,9 @@
            url: '/log',
            method: "POST",
            data: {
-               pkg: "{{ $url->package_code }}",
-               cp: "{{ $url->cp_id }}"
+               pkg: "{{ $url->data->packageCode  }}",
+               cp: "{{ $url->data->cpId }}",
+               name: "{{ $url->data->name }}"
            },
            success: function (response) {
                window.location.href = response.url

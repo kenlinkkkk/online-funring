@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use App\Models\Partner;
 use App\Models\RequestLog;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
+    private $client;
+
     public function __construct()
     {
-
+        $this->client = new Client();
     }
 
     public function welcome()
@@ -22,8 +25,13 @@ class HomeController extends Controller
 
     public function index($cp_code)
     {
-        $parseUrl = '/tt/' . $cp_code;
-        $url = Partner::query()->where('url', '=', $parseUrl)->where('status', '=', 1)->first();
+        $options = [
+            'query' => [
+                'code' => $cp_code
+            ]
+        ];
+        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
+        $url = json_decode($response);
         $data = compact('url');
         return view('index', $data);
     }
@@ -33,17 +41,18 @@ class HomeController extends Controller
         $msisdn = $_SERVER['HTTP_MSISDN'];
         $transId = microtime(true) * 10000 .'0';
 
-        $log = RequestLog::query()->create([
-            'msisdn' => $msisdn,
-            'created_date' => date('Y-m-d'),
-            'created_time' => date('Y-m-d H:i:s'),
-            'package_code' => $data['pkg'],
-            'trans_id' => $transId,
-            'cp_id' => $data['cp'],
-            'status' => 0,
-        ]);
+        $options = [
+            'query' => [
+                'code' => $data[''],
+                'msisdn' => $msisdn,
+                'req_id' => $transId,
+            ]
+        ];
+
+        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/log_req', $options);
+        $dataResp = json_decode($response, true);
         $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $data['pkg']."&transid=" .$transId. "&mmisdn=";
-        if ($log) {
+        if ($dataResp['code'] == 1) {
             return response()->json([
                 'url' => $urlRedirect
             ]);
