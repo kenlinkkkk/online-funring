@@ -58,13 +58,19 @@ class HomeController extends Controller
     {
         $transId = $request->get('req_id');
         $rsCode = $request->get('rs_code');
-
+        $msisdn = $request->get('isdn');
+        
         $log = RequestLog::query()->where([
-            ['trans_id', '=', $transId]
+            ['trans_id', '=', $transId],
+            ['msisdn', '=', $msisdn]
         ])->update([
-            'result' => 1
+            'result' => $rsCode[0]
         ]);
 
-        return view('thank');
+        if ($rsCode[0]) {
+            return Redirect::away('http://funring.vn');
+        }
+
+        return Redirect::route('welcome');
     }
 }

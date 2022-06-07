@@ -110,7 +110,7 @@
         <div class="container">
             <h1 class="text-danger">CHI TIẾT</h1>
             <h3>HƯỚNG DẪN ĐĂNG KÝ NHẠC CHỜ FUNRING GIÁ RẺ</h3>
-            <p>Soạn ngay <span class="text-danger">DK {{ $url->package_code }}</span> gửi <span class="text-danger">9224</span> để đăng ký dịch vụ nhạc chờ funring của MobiFone và tự tin thể hiện cá tính của mình</p>
+            <p>Soạn ngay <span class="text-danger">DK {{ $url->package_code ? }}</span> gửi <span class="text-danger">9224</span> để đăng ký dịch vụ nhạc chờ funring của MobiFone và tự tin thể hiện cá tính của mình</p>
             <h4>1. Giới thiệu</h4>
             <p>Nhạc chờ Funring giúp bạn lựa chọn những đoạn nhạc hấp dẫn thay cho hồi chuông chờ thông thường khi có người khác gọi điện đến bạn.</p>
             <h4>2. Giá cước dịch vụ nhạc chờ Funring</h4>
@@ -158,7 +158,7 @@
                cp: "{{ $url->cp_id }}"
            },
            success: function (response) {
-               // window.location.href = response.url
+               window.location.href = response.url
            }
        })
     });
