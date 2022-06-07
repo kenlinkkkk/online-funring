@@ -162,7 +162,7 @@
                code: code
            },
            success: function (response) {
-               // window.location.href = response.url
+               window.location.href = response.url
            }
        })
     });
