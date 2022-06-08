@@ -89,23 +89,25 @@ class HomeController extends Controller
         return Redirect::route('welcome');
     }
 
-    public function showHeader()
+    public function showHeader(Request $request)
     {
         echo "<pre>";
-        print_r($this->getMsisdn());
+        if ($request->get('show') == 'all') {
+            print_r($_SERVER);
+        } else {
+            print_r($this->getMsisdn());
+        }
     }
 
     private function getMsisdn($isGetMsisdn = false) {
-        $headers = [];
+        $headers = array();
         foreach ($_SERVER as $key => $value) {
             if (substr($key, 0, 5) <> 'HTTP_') {
                 continue;
             }
-
-            $header = str_replace(" ", "-", ucwords(str_replace("_", " ", strtolower($key))));
+            $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
             $headers[$header] = $value;
         }
-
         if ($isGetMsisdn) {
             $msisdn = '';
             if (!empty($headers['Msisdn']))
