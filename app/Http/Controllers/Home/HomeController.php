@@ -39,7 +39,7 @@ class HomeController extends Controller
 
     public function logRequest(Request $request) {
         $data = $request->except('_token');
-        $msisdn = !empty($_SERVER['HTTP_MSISDN']) ? $_SERVER['HTTP_MSISDN'] : "";
+        $msisdn = $this->getMsisdn(true);
         $transId = microtime(true) * 10000 .'0';
 
         $options = [
@@ -91,6 +91,41 @@ class HomeController extends Controller
 
     public function showHeader()
     {
-        print_r($_SERVER);
+        echo "<pre>";
+        print_r($this->getMsisdn());
+    }
+
+    private function getMsisdn($isGetMsisdn = false) {
+        $headers = [];
+        foreach ($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) <> 'HTTP_') {
+                continue;
+            }
+
+            $header = str_replace(" ", "-", ucwords(str_replace("_", " ", strtolower($key, 5))));
+            $headers[$header] = $value;
+        }
+
+        if ($isGetMsisdn) {
+            $msisdn = '';
+            if (!empty($headers['Msisdn']))
+            {
+                $msisdn = '84'.substr($headers['Msisdn'], '-9');
+            }
+
+            if (!empty($headers['Msisdn1']))
+            {
+                $msisdn = '84'.substr($headers['Msisdn1'], '-9');
+            }
+
+            if (!empty($headers['X-Wap-Msisdn']))
+            {
+                $msisdn = '84'.substr($headers['X-Wap-Msisdn'], '-9');
+            }
+
+            return $msisdn;
+        }
+
+        return $headers;
     }
 }
