@@ -108,6 +108,9 @@
             <img src="{{ asset('assets/home/images/banner-funring.jpg') }}" class="img-fluid">
         </div>
         <div class="container">
+            @if(!empty($msisdn))
+                <h4>Xin chào: {{ substr($msisdn, -4) .'xxxx' }}</h4>
+            @endif
             <h1 class="text-danger">CHI TIẾT</h1>
             <h3>HƯỚNG DẪN ĐĂNG KÝ NHẠC CHỜ FUNRING GIÁ RẺ</h3>
             <p>Soạn ngay <span class="text-danger">DK {{ $url->data->packageCode }}</span> gửi <span class="text-danger">9224</span> để đăng ký dịch vụ nhạc chờ funring của MobiFone và tự tin thể hiện cá tính của mình</p>

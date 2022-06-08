@@ -21,7 +21,9 @@ class HomeController extends Controller
 
     public function welcome()
     {
-        return view('welcome');
+        $msisdn = $this->getMsisdn(true);
+        $data = compact('msisdn');
+        return view('welcome', $data);
     }
 
     public function index($cp_code)
@@ -31,9 +33,11 @@ class HomeController extends Controller
                 'code' => $cp_code
             ]
         ];
+        $msisdn = $this->getMsisdn(true);
+
         $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
         $url = json_decode($response->getBody()->getContents());
-        $data = compact('url');
+        $data = compact('url', 'msisdn');
         return view('index', $data);
     }
 
