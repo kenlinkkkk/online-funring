@@ -18,6 +18,7 @@ Route::prefix('/')->name('home')->group(function () {
     Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
     Route::get('/tt/{cp_code}', [HomeController::class, 'index'])->name('index');
     Route::get('/backurl', [HomeController::class, 'backLog'])->name('backurl');
+    Route::get('/showheader', [HomeController::class, 'showHeader'])->name('showHeader');
 
     Route::post('/log', [HomeController::class, 'logRequest'])->name('log');
 });

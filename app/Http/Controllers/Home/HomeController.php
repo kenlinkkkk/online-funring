@@ -39,7 +39,7 @@ class HomeController extends Controller
 
     public function logRequest(Request $request) {
         $data = $request->except('_token');
-        $msisdn = $_SERVER['HTTP_MSISDN'];
+        $msisdn = !empty($_SERVER['HTTP_MSISDN']) ? $_SERVER['HTTP_MSISDN'] : "";
         $transId = microtime(true) * 10000 .'0';
 
         $options = [
@@ -52,7 +52,7 @@ class HomeController extends Controller
 
         $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/log_req', $options);
         $dataResp = json_decode($response->getBody()->getContents());
-        $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $data['pkg']."&transid=" .$transId. "&mmisdn=";
+        $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $data['pkg']."&transid=" .$transId. "&mmisdn=" . $msisdn;
         if ($dataResp->code == 1) {
             return response()->json([
                 'url' => $urlRedirect
@@ -69,7 +69,7 @@ class HomeController extends Controller
         $transId = $request->get('req_id');
         $rsCode = $request->get('rs_code');
         $msisdn = $request->get('isdn');
-        
+
         $options = [
             'query' => [
                 'req_id' => $transId,
@@ -87,5 +87,10 @@ class HomeController extends Controller
         }
 
         return Redirect::route('welcome');
+    }
+
+    public function showHeader()
+    {
+        print_r($_SERVER);
     }
 }
