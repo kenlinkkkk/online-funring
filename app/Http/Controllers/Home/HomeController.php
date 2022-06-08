@@ -102,7 +102,7 @@ class HomeController extends Controller
                 continue;
             }
 
-            $header = str_replace(" ", "-", ucwords(str_replace("_", " ", strtolower($key, 5))));
+            $header = str_replace(" ", "-", ucwords(str_replace("_", " ", strtolower($key))));
             $headers[$header] = $value;
         }
 
