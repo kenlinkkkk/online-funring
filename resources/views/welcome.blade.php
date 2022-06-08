@@ -109,7 +109,7 @@
         </div>
         <div class="container">
             @if(!empty($msisdn))
-                <h4>Xin chào: {{ substr($msisdn, -4) .'xxxx' }}</h4>
+                <p>Xin chào: {{ substr($msisdn, 0, 7) .'xxxx' }}</p>
             @endif
             <h1 class="text-danger">CHI TIẾT</h1>
             <h3>HƯỚNG DẪN ĐĂNG KÝ NHẠC CHỜ FUNRING GIÁ RẺ</h3>
