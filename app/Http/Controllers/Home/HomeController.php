@@ -7,6 +7,7 @@ use App\Models\Partner;
 use App\Models\RequestLog;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 
@@ -56,7 +57,14 @@ class HomeController extends Controller
 
         $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/log_req', $options);
         $dataResp = json_decode($response->getBody()->getContents());
+        $redirectData = [
+            'id' => 601816,
+            'pkg' => $data['pkg'],
+            'transid' => $transId,
+            'msisdn' => $msisdn
+        ];
         $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $data['pkg']."&transid=" .$transId. "&mmisdn=" . $msisdn;
+        Log::info("REDIRECT:: " . '/confirmsub_v1.jsp?' . http_build_query($redirectData), []);
         if ($dataResp->code == 1) {
             return response()->json([
                 'url' => $urlRedirect
@@ -72,7 +80,6 @@ class HomeController extends Controller
     {
         $transId = $request->get('req_id');
         $rsCode = $request->get('rs_code');
-        $msisdn = $request->get('isdn');
 
         $options = [
             'query' => [
@@ -106,11 +113,15 @@ class HomeController extends Controller
     private function getMsisdn($isGetMsisdn = false) {
         $headers = array();
         foreach ($_SERVER as $key => $value) {
-            if (substr($key, 0, 5) <> 'HTTP_') {
-                continue;
+            if (substr($key, 0, 5) == 'HTTP_') {
+                $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+                $headers[$header] = $value;
             }
-            $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
-            $headers[$header] = $value;
+
+            if (substr($key, 0, 7) == 'REMOTE_') {
+                $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 7)))));
+                $headers[$header] = $value;
+            }
         }
         if ($isGetMsisdn) {
             $msisdn = '';
