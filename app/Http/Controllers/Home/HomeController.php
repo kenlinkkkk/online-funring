@@ -39,7 +39,7 @@ class HomeController extends Controller
         ];
 
         try {
-            $response = $this->client->requestAsync('GET', 'http://localhost:5556/v1/fun/get_url', $options);
+            $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
             $url = json_decode($response->getBody()->getContents());
 
 //            $data = compact('url', 'msisdn');
@@ -123,7 +123,7 @@ class HomeController extends Controller
         ];
 
         try {
-            $response = $this->client->requestAsync('POST', 'http://localhost:5556/v1/fun/update_log', $options);
+            $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/update_log', $options);
             $dataResp = json_decode($response->getBody()->getContents());
             Log::info("FUNRING;BACKURL;" . 'DATA;transId=' . $transId . ";rs_code=" . $rsCode . ";url=" . URL::full(), [
                 'dataResp' => $dataResp
