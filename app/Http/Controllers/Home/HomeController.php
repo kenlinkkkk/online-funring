@@ -109,7 +109,7 @@ class HomeController extends Controller
 
     public function backLog(Request $request)
     {
-        $transId = $request->get('req_id');
+        $transId = $request->get('transaction_id');
         $rsCode = $request->get('rs_code');
 
         $options = [
@@ -176,5 +176,25 @@ class HomeController extends Controller
         }
 
         return $headers;
+    }
+
+    public function test()
+    {
+        $options = [
+            'form_params' => [
+                'type' => 'RESPONSE',
+                'rs_code' => 3,
+                'resp_date' => microtime(true) * 10000 .'0',
+                'resp_data' => '',
+                'req_id' => '165483698609740'
+            ]
+        ];
+        Log::info("FUNRING;BACKURL;" . 'DATA;transId=' . $transId . ";rs_code=" . $rsCode . ";url=" . URL::full(), []);
+        try {
+            $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/update_log', $options);
+            $dataResp = json_decode($response->getBody()->getContents());
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+        }
     }
 }

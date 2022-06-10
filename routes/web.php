@@ -19,6 +19,7 @@ Route::prefix('/')->name('home')->group(function () {
     Route::get('/tt/{cp_code}', [HomeController::class, 'index'])->name('index');
     Route::get('/backurl', [HomeController::class, 'backLog'])->name('backurl');
     Route::get('/showheader', [HomeController::class, 'showHeader'])->name('showHeader');
+    Route::get('/test', [HomeController::class, 'test'])->name('test');
 
     Route::post('/log', [HomeController::class, 'logRequest'])->name('log');
 });
