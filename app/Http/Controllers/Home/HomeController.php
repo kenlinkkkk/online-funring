@@ -56,14 +56,14 @@ class HomeController extends Controller
         $transId = microtime(true) * 10000 .'0';
 
         $options = [
-            'query' => [
+            'form_params' => [
                 'code' => $data['code'],
                 'msisdn' => $msisdn,
                 'req_id' => $transId,
             ]
         ];
 
-        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/log_req', $options);
+        $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/log_req', $options);
         $dataResp = json_decode($response->getBody()->getContents());
         $redirectData = [
             'id' => 601816,
