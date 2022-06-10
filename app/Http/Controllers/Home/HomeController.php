@@ -27,27 +27,51 @@ class HomeController extends Controller
         return view('welcome', $data);
     }
 
-    public function index($cp_code)
+    public function index(Request $request, $cp_code)
     {
+        $msisdn = $this->getMsisdn(true);
+        $transId = microtime(true) * 10000 .'0';
+        $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=N3&transid=" .$transId. "&mmisdn=" . $msisdn;
         $options = [
             'query' => [
                 'code' => $cp_code
             ]
         ];
-        $msisdn = $this->getMsisdn(true);
-        try {
-            $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
-            $url = json_decode($response->getBody()->getContents());
-            $data = compact('url', 'msisdn');
 
-            return view('index', $data);
+        try {
+            $response = $this->client->requestAsync('GET', 'http://localhost:5556/v1/fun/get_url', $options);
+            $url = json_decode($response->getBody()->getContents());
+
+//            $data = compact('url', 'msisdn');
+//            return view('index', $data);
+
+            // redirect without click
+
+            $optionsLogReq = [
+                'form_params' => [
+                    'code' => $cp_code,
+                    'msisdn' => $msisdn,
+                    'req_id' => $transId,
+                ]
+            ];
+
+            $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/log_req', $optionsLogReq);
+            $dataResp = json_decode($response->getBody()->getContents());
+            $redirectData = [
+                'id' => 601816,
+                'pkg' => $url->data->packageCodea ? $url->data->packageCode : 'N3',
+                'transid' => $transId,
+                'msisdn' => $msisdn
+            ];
+            $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $url->data->packageCodea."&transid=" .$transId. "&mmisdn=" . $msisdn;
+            Log::info("FUNRING;REDIRECT;" . '/confirmsub_v1.jsp?'.http_build_query($redirectData) , [
+                'ip' => $request->ip(),
+                'log_req' => $dataResp
+            ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-
-        $msisdn = $this->getMsisdn(true);
-        $data = compact('msisdn');
-        return view('welcome', $data);
+        return Redirect::away($urlRedirect);
     }
 
     public function logRequest(Request $request) {
@@ -99,7 +123,7 @@ class HomeController extends Controller
         ];
 
         try {
-            $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/update_log', $options);
+            $response = $this->client->requestAsync('POST', 'http://localhost:5556/v1/fun/update_log', $options);
             $dataResp = json_decode($response->getBody()->getContents());
             Log::info("FUNRING;BACKURL;" . 'DATA;transId=' . $transId . ";rs_code=" . $rsCode . ";url=" . URL::full(), [
                 'dataResp' => $dataResp

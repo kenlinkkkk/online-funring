@@ -153,7 +153,6 @@
     });
 
     $('.btn-reg').on('click', function (e) {
-        let url = window.location.href;
         let code = this.href.substring(this.href.lastIndexOf('/') + 1);
        $.ajax({
            url: '/log',
@@ -165,7 +164,7 @@
                code: code
            },
            success: function (response) {
-               window.location.href = response.url
+               // window.location.href = response.url
            }
        })
     });
