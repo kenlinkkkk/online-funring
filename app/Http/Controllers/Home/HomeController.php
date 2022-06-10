@@ -59,7 +59,7 @@ class HomeController extends Controller
             $dataResp = json_decode($response->getBody()->getContents());
             $redirectData = [
                 'id' => 601816,
-                'pkg' => $url->data->packageCode ? $url->data->packageCode : 'N3',
+                'pkg' => $url->data->packageCode ? : 'N3',
                 'transid' => $transId,
                 'msisdn' => $msisdn
             ];
@@ -121,13 +121,10 @@ class HomeController extends Controller
                 'req_id' => $transId
             ]
         ];
-
+        Log::info("FUNRING;BACKURL;" . 'DATA;transId=' . $transId . ";rs_code=" . $rsCode . ";url=" . URL::full(), []);
         try {
             $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/update_log', $options);
             $dataResp = json_decode($response->getBody()->getContents());
-            Log::info("FUNRING;BACKURL;" . 'DATA;transId=' . $transId . ";rs_code=" . $rsCode . ";url=" . URL::full(), [
-                'dataResp' => $dataResp
-            ]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
         }
