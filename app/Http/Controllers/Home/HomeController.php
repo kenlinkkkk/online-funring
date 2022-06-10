@@ -116,8 +116,8 @@ class HomeController extends Controller
             'form_params' => [
                 'type' => 'RESPONSE',
                 'rs_code' => $rsCode,
-                'resp_date' => microtime(true) * 10000 .'0',
-                'resp_data' => '',
+                'resp_date' => floor(microtime(true) * 1000),
+                'resp_data' => http_build_query($request->all()),
                 'req_id' => $transId
             ]
         ];
