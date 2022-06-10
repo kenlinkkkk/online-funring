@@ -59,11 +59,11 @@ class HomeController extends Controller
             $dataResp = json_decode($response->getBody()->getContents());
             $redirectData = [
                 'id' => 601816,
-                'pkg' => $url->data->packageCodea ? $url->data->packageCode : 'N3',
+                'pkg' => $url->data->packageCode ? $url->data->packageCode : 'N3',
                 'transid' => $transId,
                 'msisdn' => $msisdn
             ];
-            $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $url->data->packageCodea."&transid=" .$transId. "&mmisdn=" . $msisdn;
+            $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $url->data->packageCode."&transid=" .$transId. "&mmisdn=" . $msisdn;
             Log::info("FUNRING;REDIRECT;" . '/confirmsub_v1.jsp?'.http_build_query($redirectData) , [
                 'ip' => $request->ip(),
                 'log_req' => $dataResp
