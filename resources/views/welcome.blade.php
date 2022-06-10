@@ -157,7 +157,7 @@
             url: '/log',
             method: "POST",
             data: {
-                pkg: "N2",
+                pkg: "N3",
                 cp: "VANO",
                 name: "VANO",
                 code: "abcabc"

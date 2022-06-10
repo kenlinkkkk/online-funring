@@ -154,7 +154,7 @@
 
     $('.btn-reg').on('click', function (e) {
         let url = window.location.href;
-        let code = url.split('/').pop();
+        let code = this.href.substring(this.href.lastIndexOf('/') + 1);
        $.ajax({
            url: '/log',
            method: "POST",

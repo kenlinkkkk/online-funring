@@ -35,11 +35,19 @@ class HomeController extends Controller
             ]
         ];
         $msisdn = $this->getMsisdn(true);
+        try {
+            $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
+            $url = json_decode($response->getBody()->getContents());
+            $data = compact('url', 'msisdn');
 
-        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/get_url', $options);
-        $url = json_decode($response->getBody()->getContents());
-        $data = compact('url', 'msisdn');
-        return view('index', $data);
+            return view('index', $data);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        $msisdn = $this->getMsisdn(true);
+        $data = compact('msisdn');
+        return view('welcome', $data);
     }
 
     public function logRequest(Request $request) {
@@ -64,15 +72,14 @@ class HomeController extends Controller
             'msisdn' => $msisdn
         ];
         $urlRedirect = "http://support.funring.vn/support/funringonline/confirmsub_v1.jsp?id=601816&pkg=". $data['pkg']."&transid=" .$transId. "&mmisdn=" . $msisdn;
-        Log::info("REDIRECT:: " . '/confirmsub_v1.jsp?' . http_build_query($redirectData), []);
-        if ($dataResp->code == 1) {
-            return response()->json([
-                'url' => $urlRedirect
-            ]);
-        }
+
+        Log::info("FUNRING;REDIRECT;" . '/confirmsub_v1.jsp?'.http_build_query($redirectData) , [
+            'ip' => $request->ip(),
+            'log_req' => $dataResp
+        ]);
 
         return response()->json([
-            'url' => '/404'
+            'url' => $urlRedirect
         ]);
     }
 
@@ -82,22 +89,26 @@ class HomeController extends Controller
         $rsCode = $request->get('rs_code');
 
         $options = [
-            'query' => [
-                'req_id' => $transId,
+            'form_params' => [
                 'type' => 'RESPONSE',
                 'rs_code' => $rsCode,
-                'resp_data' => URL::full()
+                'resp_date' => microtime(true) * 10000 .'0',
+                'resp_data' => '',
+                'req_id' => $transId
             ]
         ];
 
-        $response = $this->client->request('GET', 'http://localhost:5556/v1/fun/update_log', $options);
-        $dataResp = json_decode($response->getBody()->getContents());
-
-        if ($dataResp->code == 1) {
-            return Redirect::away('http://funring.vn');
+        try {
+            $response = $this->client->request('POST', 'http://localhost:5556/v1/fun/update_log', $options);
+            $dataResp = json_decode($response->getBody()->getContents());
+            Log::info("FUNRING;BACKURL;" . 'DATA;transId=' . $transId . ";rs_code=" . $rsCode . ";url=" . URL::full(), [
+                'dataResp' => $dataResp
+            ]);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
         }
 
-        return Redirect::route('welcome');
+        return Redirect::away('http://funring.vn');
     }
 
     public function showHeader(Request $request)
